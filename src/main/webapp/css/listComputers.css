@@ -1,0 +1,7 @@
+table tbody td,
+thead th {
+    font-size: 20px;
+}
+.fa-pen, .fa-trash-alt {
+    font-size: 30px;
+}
