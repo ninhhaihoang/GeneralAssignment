@@ -1,4 +1,6 @@
 function submitForm() {
+    var error = $("#computer_add_error");
+    error.html("");
     let resultCheck = true;
     let resultCheckComputerCode = checkComputerCode();
     if (!resultCheckComputerCode) { resultCheck = false; }

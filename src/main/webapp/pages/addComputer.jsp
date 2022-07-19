@@ -30,9 +30,10 @@
             <!-- big header -->
             <div class="btn-group" role="group" aria-label="...">
                 <a type="button" class="btn btn-secondary" href="<c:url value="home.jsp" />" style="background-color: rgb(66, 64, 81); border: 0;">Home</a>
-                <a type="button" class="btn btn-secondary" href="<c:url value="listComputers.jsp" />" style="background-color: rgb(66, 64, 81); border: 0;">Computer</a>
-                <a type="button" class="btn btn-secondary" href="<c:url value="listCustomer.jsp" />" style="background-color: rgb(66, 64, 81); border: 0;">Customer</a>
-                <a type="button" class="btn btn-secondary" href="<c:url value="listService.jsp" />" style="background-color: rgb(66, 64, 81); border: 0;">Service</a>
+                <a type="button" class="btn btn-secondary" href="<%=request.getContextPath()%>/computers/list?pageNumber=1" style="background-color: rgb(66, 64, 81); border: 0;">Computer</a>
+                <a type="button" class="btn btn-secondary" href="<%=request.getContextPath()%>/customers/list?pageNumber=1" style="background-color: rgb(66, 64, 81); border: 0;">Customer</a>
+                <a type="button" class="btn btn-secondary" href="<%=request.getContextPath()%>/services/list?pageNumber=1"
+                   style="background-color: rgb(66, 64, 81); border: 0;">Service</a>
             </div>
         </div>
         <div class="col col-md-6 justify-content-end flex-row" style="display: flex;">
@@ -40,25 +41,48 @@
 
         </div>
     </div>
-    <h1 style="color:rgb(66, 64, 81); text-align: center;">Add Computer</h1>
+    <c:if test="${computer == null}">
+        <h1 style="color:rgb(66, 64, 81); text-align: center;">Add Computer</h1>
+    </c:if>
+    <c:if test="${computer != null}">
+        <h1 style="color:rgb(66, 64, 81); text-align: center;">Edit Computer</h1>
+    </c:if>
 
     <div class="container"
          style="width: 500px; background-color: rgb(66, 64, 81); border-radius: 10px; padding: 30px; color: white;">
-        <form onsubmit="return submitForm();">
+        <c:if test="${computer != null}">
+            <form method="post" action="edit-process" onsubmit="return submitForm();">
+        </c:if>
+        <c:if test="${computer == null}">
+            <form method="post" action="add-process" onsubmit="return submitForm();">
+        </c:if>
+            <c:if test="${errorMessage != null}">
+                <span class="text-danger" id="computer_add_error"><c:out value="${errorMessage}"/> </span>
+            </c:if>
             <div class="form-group">
                 <label for="computerCode">Code</label>
-                <input type="text" class="form-control" id="computerCode" placeholder="Enter computer code">
+                <c:if test="${computer != null}">
+                    <input type="text" class="form-control" id="computerCode" readonly="readonly" name="computerCode"
+                           value="<c:out value="${computer.computerCode}"/>" placeholder="Enter computer code">
+                </c:if>
+                <c:if test="${computer == null}">
+                    <input type="text" class="form-control" id="computerCode" name="computerCode"
+                           value="<c:out value="${computer.computerCode}"/>" placeholder="Enter computer code">
+                </c:if>
+                <span class="text-danger" id="computer_code_error"></span>
             </div>
             <div class="form-group">
                 <label for="location">Location</label>
-                <input type="text" class="form-control" id="location" placeholder="Enter location">
+                <input type="text" class="form-control" id="location" name="location"
+                       value="<c:out value="${computer.location}"/>"placeholder="Enter location">
             </div>
             <div class="form-group">
                 <label for="status">Status</label>
-                <input type="text" class="form-control" id="status" placeholder="Enter status">
+                <input type="text" class="form-control" id="status" name="status"
+                       value="<c:out value="${computer.status}"/>"placeholder="Enter status">
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
-            <button type="button" class="btn btn-danger" onclick="resetList();">Cancel</button>
+            <a type="button" class="btn btn-danger" href="<%=request.getContextPath()%>/computers/list?pageNumber=1">Cancel</a>
         </form>
     </div>
 </div>

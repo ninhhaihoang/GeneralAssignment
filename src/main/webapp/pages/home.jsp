@@ -24,9 +24,10 @@
             <!-- big header -->
             <div class="btn-group" role="group" aria-label="...">
                 <a type="button" class="btn btn-secondary" href="<c:url value="home.jsp" />"  style="background-color: rgb(66, 64, 81); border: 0;">Home</a>
-                <a type="button" class="btn btn-secondary" href="<c:url value="listComputers.jsp" />" style="background-color: rgb(66, 64, 81); border: 0;">Computer</a>
-                <a type="button" class="btn btn-secondary" href="<%=request.getContextPath()%>/customers/list" style="background-color: rgb(66, 64, 81); border: 0;">Customer</a>
-                <a type="button" class="btn btn-secondary" href="<c:url value="listService.jsp" />" style="background-color: rgb(66, 64, 81); border: 0;">Service</a>
+                <a type="button" class="btn btn-secondary" href="<%=request.getContextPath()%>/computers/list?pageNumber=1" style="background-color: rgb(66, 64, 81); border: 0;">Computer</a>
+                <a type="button" class="btn btn-secondary" href="<%=request.getContextPath()%>/customers/list?pageNumber=1" style="background-color: rgb(66, 64, 81); border: 0;">Customer</a>
+                <a type="button" class="btn btn-secondary" href="<%=request.getContextPath()%>/services/list?pageNumber=1"
+                   style="background-color: rgb(66, 64, 81); border: 0;">Service</a>
             </div>
         </div>
         <div class="col col-md-6 justify-content-end flex-row" style="display: flex;">

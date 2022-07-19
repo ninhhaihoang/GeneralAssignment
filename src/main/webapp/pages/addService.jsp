@@ -30,9 +30,14 @@
             <!-- big header -->
             <div class="btn-group" role="group" aria-label="...">
                 <a type="button" class="btn btn-secondary" href="<c:url value="home.jsp" />" style="background-color: rgb(66, 64, 81); border: 0;">Home</a>
-                <a type="button" class="btn btn-secondary" href="<c:url value="listComputers.jsp" />" style="background-color: rgb(66, 64, 81); border: 0;">Computer</a>
-                <a type="button" class="btn btn-secondary" href="<c:url value="listCustomer.jsp" />" style="background-color: rgb(66, 64, 81); border: 0;">Customer</a>
-                <a type="button" class="btn btn-secondary" href="<c:url value="listService.jsp" />" style="background-color: rgb(66, 64, 81); border: 0;">Service</a>
+                <a type="button" class="btn btn-secondary"
+                   href="<%=request.getContextPath()%>/computers/list?pageNumber=1"
+                   style="background-color: rgb(66, 64, 81); border: 0;">Computer</a>
+                <a type="button" class="btn btn-secondary"
+                   href="<%=request.getContextPath()%>/customers/list?pageNumber=1"
+                   style="background-color: rgb(66, 64, 81); border: 0;">Customer</a>
+                <a type="button" class="btn btn-secondary" href="<%=request.getContextPath()%>/services/list?pageNumber=1"
+                   style="background-color: rgb(66, 64, 81); border: 0;">Service</a>
             </div>
         </div>
         <div class="col col-md-6 justify-content-end flex-row" style="display: flex;">
@@ -40,29 +45,55 @@
 
         </div>
     </div>
-    <h1 style="color:rgb(66, 64, 81); text-align: center;">Add Service</h1>
+    <c:if test="${service == null}">
+        <h1 style="color:rgb(66, 64, 81); text-align: center;">Add Service</h1>
+    </c:if>
+    <c:if test="${service != null}">
+        <h1 style="color:rgb(66, 64, 81); text-align: center;">Edit Service</h1>
+    </c:if>
 
     <div class="container"
          style="width: 500px; background-color: rgb(66, 64, 81); border-radius: 10px; padding: 30px; color: white;">
-        <form onsubmit="return submitForm();">
+        <c:if test="${service != null}">
+            <form method="post" action="edit-process" onsubmit="return submitForm();">
+        </c:if>
+        <c:if test="${service == null}">
+            <form method="post" action="add-process" onsubmit="return submitForm();">
+        </c:if>
+            <c:if test="${errorMessage != null}">
+                <span class="text-danger" id="service_add_error"><c:out value="${errorMessage}"/> </span>
+            </c:if>
             <div class="form-group">
-                <label for="serivceCode">Code</label>
-                <input type="text" class="form-control" id="serivceCode" placeholder="Enter service code">
+                <label for="serviceCode">Code</label>
+                <c:if test="${service != null}">
+                    <input type="text" class="form-control" id="serviceCode" readonly="readonly"
+                           name="serviceCode"
+                           value="<c:out value="${service.serviceCode}"/>" placeholder="Enter service code">
+                </c:if>
+                <c:if test="${service == null}">
+                    <input type="text" class="form-control" id="serviceCode" name="serviceCode"
+                           value="<c:out value="${service.serviceCode}"/>" placeholder="Enter service code">
+                </c:if>
+                <span class="text-danger" id="service_code_error"></span>
             </div>
             <div class="form-group">
                 <label for="serviceName">Service name</label>
-                <input type="text" class="form-control" id="serviceName" placeholder="Enter service name">
+                <input type="text" class="form-control" id="serviceName" name="serviceName"
+                       value="<c:out value="${service.serviceName}"/>" placeholder="Enter service name">
             </div>
             <div class="form-group">
                 <label for="unit">Unit</label>
-                <input type="text" class="form-control" id="unit" placeholder="Enter unit">
+                <input type="text" class="form-control" id="unit" name="unit"
+                       value="<c:out value="${service.unit}"/>" placeholder="Enter unit">
             </div>
             <div class="form-group">
                 <label for="price">Price</label>
-                <input type="text" class="form-control" id="price" placeholder="Enter price">
+                <input type="text" class="form-control" id="price" name="price"
+                       value="<c:out value="${service.price}"/>" placeholder="Enter price">
+                <span class="text-danger" id="price_error"></span>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
-            <button type="button" class="btn btn-danger" onclick="resetList();">Cancel</button>
+            <a type="button" class="btn btn-danger" href="<%=request.getContextPath()%>/services/list?pageNumber=1">Cancel</a>
         </form>
     </div>
 </div>

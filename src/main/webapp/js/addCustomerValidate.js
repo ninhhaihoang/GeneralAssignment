@@ -1,4 +1,6 @@
 function submitForm() {
+    var error = $("#customer_add_error");
+    error.html("");
     let resultCheck = true;
     let resultCheckPhone = checkPhone();
     if (!resultCheckPhone) { resultCheck = false; }

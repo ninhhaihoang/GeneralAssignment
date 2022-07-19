@@ -1,8 +1,8 @@
 package fa.training.controller;
 
-import fa.training.model.Customer;
-import fa.training.repository.CustomerRepository;
-import fa.training.repository.impl.CustomerRepositoryImpl;
+import fa.training.model.Service;
+import fa.training.repository.ServiceRepository;
+import fa.training.repository.impl.ServiceRepositoryImpl;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -16,12 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@WebServlet(urlPatterns = "/customers/*", asyncSupported = true, loadOnStartup = 1)
-public class CustomerServlet extends HttpServlet {
-
+@WebServlet(urlPatterns = "/services/*", asyncSupported = true, loadOnStartup = 1)
+public class ServiceServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    private CustomerRepository customerRepo = new CustomerRepositoryImpl();
+    private ServiceRepository serviceRepo = new ServiceRepositoryImpl();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -47,10 +46,10 @@ public class CustomerServlet extends HttpServlet {
                     editProcess(request, response);
                     break;
                 case "/delete":
-                    deleteCustomer(request, response);
+                    deleteService(request, response);
                     break;
                 case "/list":
-                    listCustomers(request, response);
+                    listService(request, response);
                     break;
             }
         } catch (SQLException e) {
@@ -60,76 +59,73 @@ public class CustomerServlet extends HttpServlet {
 
     private void showAddPage(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/pages/addCustomer.jsp");
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/pages/addService.jsp");
         requestDispatcher.forward(request, response);
     }
 
     private void addProcess(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
-        String errorMessage = "Mã khách hàng đã tồn tại";
+        String errorMessage = "Mã dịch vụ đã tồn tại";
 
-        String customerCode = request.getParameter("customerCode");
-        String fullName = request.getParameter("fullName");
-        String address = request.getParameter("address");
-        String phone = request.getParameter("phone");
-        String email = request.getParameter("email");
+        String serviceCode = request.getParameter("serviceCode");
+        String serviceName = request.getParameter("serviceName");
+        String unit = request.getParameter("unit");
+        long price = Long.parseLong(request.getParameter("price"));
 
-        if (customerRepo.findById(customerCode) != null) {
+        if (serviceRepo.findById(serviceCode) != null) {
             request.setAttribute("errorMessage", errorMessage);
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/pages/addCustomer.jsp");
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/pages/addService.jsp");
             requestDispatcher.forward(request, response);
         }
-        if (customerRepo.findById(customerCode) == null) {
-            Customer customer = new Customer(customerCode, fullName, address, phone, email);
-            customerRepo.save(customer);
+        if (serviceRepo.findById(serviceCode) == null) {
+            Service service = new Service(serviceCode, serviceName, unit, price);
+            serviceRepo.save(service);
             response.sendRedirect("list?pageNumber=1");
         }
     }
 
     private void showEditPage(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
-        String customerCode = request.getParameter("id");
-        System.out.println(customerCode);
-        Customer customer = customerRepo.findById(customerCode);
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/pages/addCustomer.jsp");
-        request.setAttribute("customer", customer);
+        String ServiceCode = request.getParameter("id");
+        System.out.println(ServiceCode);
+        Service service = serviceRepo.findById(ServiceCode);
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/pages/addService.jsp");
+        request.setAttribute("service", service);
         requestDispatcher.forward(request, response);
     }
 
     private void editProcess(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
 
-        String customerCode = request.getParameter("customerCode");
-        String fullName = request.getParameter("fullName");
-        String address = request.getParameter("address");
-        String phone = request.getParameter("phone");
-        String email = request.getParameter("email");
-        Customer customer = new Customer(customerCode, fullName, address, phone, email);
-        customerRepo.save(customer);
+        String serviceCode = request.getParameter("serviceCode");
+        String serviceName = request.getParameter("serviceName");
+        String unit = request.getParameter("unit");
+        long price = Long.parseLong(request.getParameter("price"));
+        Service service = new Service(serviceCode, serviceName, unit, price);
+        serviceRepo.save(service);
         response.sendRedirect("list?pageNumber=1");
 
     }
 
-    private void deleteCustomer(HttpServletRequest request, HttpServletResponse response)
+    private void deleteService(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
-        String customerCode = request.getParameter("id");
-        System.out.println("delete id: " + customerCode);
-        customerRepo.delete(customerCode);
+        String serviceCode = request.getParameter("id");
+        System.out.println("delete id: " + serviceCode);
+        serviceRepo.delete(serviceCode);
         response.sendRedirect("list?pageNumber=1");
     }
 
-    private void listCustomers(HttpServletRequest request, HttpServletResponse response)
+    private void listService(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
         int pageNumber = Integer.parseInt(request.getParameter("pageNumber"));
-        List<Customer> customers;
-        Map<String, Object> resMap = customerRepo.findAll(pageNumber);
-        Object obj = resMap.get("customers");
-        customers = (ArrayList) obj;
-        request.setAttribute("customerList", customers);
+        List<Service> services;
+        Map<String, Object> resMap = serviceRepo.findAll(pageNumber);
+        Object obj = resMap.get("services");
+        services = (ArrayList) obj;
+        request.setAttribute("serviceList", services);
         request.setAttribute("totalPages", (Integer) resMap.get("totalPages"));
         request.setAttribute("currentPage", pageNumber);
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/pages/listCustomer.jsp");
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/pages/listService.jsp");
         requestDispatcher.forward(request, response);
     }
-
 }

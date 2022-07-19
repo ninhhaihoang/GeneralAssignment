@@ -1,5 +1,6 @@
 package fa.training.repository.impl;
 
+import fa.training.model.Computer;
 import fa.training.model.Service;
 import fa.training.repository.ServiceRepository;
 
@@ -7,25 +8,47 @@ import fa.training.utils.HibernateUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ServiceRepositoryImpl implements ServiceRepository {
-    @Override
-    public List<Service> findAll() {
-        Session session = null;
-        List<Service> services = new ArrayList<>();
+    private final Integer PAGE_SIZE = 5;
 
+    @Override
+    public Map<String, Object> findAll(int pageNumber) {
+        Session session = null;
         try {
             session = HibernateUtils.getSessionFactory().openSession();
 
-            String hql = "SELECT Service FROM Service ";
-            services = session.createQuery(hql, Service.class).list();
+            // calculate number of pages
+            String countQ = "Select count (s.serviceCode) from Service s";
+            Query countQuery = session.createQuery(countQ);
+            int lastPageNumber = 1;
+            Long countResults = (Long) countQuery.getSingleResult();
+            if (countResults % PAGE_SIZE == 0) {
+                lastPageNumber = (int) (countResults / PAGE_SIZE);
+            }
+            if (countResults % PAGE_SIZE != 0) {
+                lastPageNumber = (int) (countResults / PAGE_SIZE) + 1;
+            }
 
-            return services;
+            TypedQuery<Service> query = session.createQuery("FROM Service s ORDER BY s.serviceCode");
+            query.setFirstResult((pageNumber - 1) * PAGE_SIZE); // offset
+            query.setMaxResults(PAGE_SIZE); // limit
+            List<Service> serviceList = query.getResultList();
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("services", serviceList);
+            response.put("totalPages", lastPageNumber);
+
+            return response;
         } catch (Exception e) {
-            System.out.println("Error");
-            return services;
+            System.out.println("List All Services Error");
+            return null;
         } finally {
             if (session != null)
                 session.close();
@@ -39,7 +62,7 @@ public class ServiceRepositoryImpl implements ServiceRepository {
         try {
             session = HibernateUtils.getSessionFactory().openSession();
 
-            String hql = "FROM Service WHERE Service.serviceCode = :id";
+            String hql = "FROM Service s WHERE s.serviceCode = :id";
             service = (Service) session.createQuery(hql).setParameter("id", id).getSingleResult();
 
             return service;

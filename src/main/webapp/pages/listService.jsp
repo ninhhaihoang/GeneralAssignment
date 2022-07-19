@@ -25,14 +25,18 @@
             <!-- big header -->
             <div class="btn-group" role="group" aria-label="...">
                 <a type="button" class="btn btn-secondary" href="<c:url value="home.jsp" />" style="background-color: rgb(66, 64, 81); border: 0;">Home</a>
-                <a type="button" class="btn btn-secondary" href="<c:url value="listComputers.jsp" />" style="background-color: rgb(66, 64, 81); border: 0;">Computer</a>
-                <a type="button" class="btn btn-secondary" href="<c:url value="listCustomer.jsp" />" style="background-color: rgb(66, 64, 81); border: 0;">Customer</a>
-                <a type="button" class="btn btn-secondary" href="<c:url value="listService.jsp" />" style="background-color: rgb(66, 64, 81); border: 0;">Service</a>
+                <a type="button" class="btn btn-secondary" href="<%=request.getContextPath()%>/computers/list?pageNumber=1"
+                   style="background-color: rgb(66, 64, 81); border: 0;">Computer</a>
+                <a type="button" class="btn btn-secondary" href="<%=request.getContextPath()%>/customers/list?pageNumber=1"
+                   style="background-color: rgb(66, 64, 81); border: 0;">Customer</a>
+                <a type="button" class="btn btn-secondary" href="<%=request.getContextPath()%>/services/list?pageNumber=1"
+                   style="background-color: rgb(66, 64, 81); border: 0;">Service</a>
             </div>
         </div>
         <div class="col col-md-6 justify-content-end flex-row" style="display: flex;">
             <!-- adding new button here  -->
-            <a class="btn btn-success" style="margin-left: 20px; width:200px" href="<c:url value="addService.jsp" />"><i
+            <a class="btn btn-success" style="margin-left: 20px; width:200px"
+               href="<%=request.getContextPath()%>/services/show-add-page"><i
                     class="fas fa-plus-circle text-white"></i> Add New Service</a>
         </div>
     </div>
@@ -59,120 +63,75 @@
                     </tr>
                     </thead>
                     <tbody>
+                    <c:forEach var="s" items="${serviceList}">
                     <tr>
                         <td>
-                            SER001
+                            <c:out value="${s.serviceCode}"/>
                         </td>
                         <td>
-                            My tom trung
+                            <c:out value="${s.serviceName}"/>
                         </td>
                         <td>
-                            VND
+                            <c:out value="${s.unit}"/>
                         </td>
                         <td>
-                            10000
+                            <c:out value="${s.price}"/>
                         </td>
                         <td>
-                            <i class="fa fa-pen text-warning " style="margin-right: 10px;"></i>
-                            <i class="fa fa-trash-alt text-danger "></i>
+                            <a href="show-edit-page?id=<c:out value='${s.serviceCode}'/>"><i
+                                    class="fa fa-pen text-warning " style="margin-right: 10px;"></i></a>
+                            <a href="delete?id=<c:out value='${s.serviceCode}'/>" onclick="return confirm('Chắc là muốn xoá khum?')"><i
+                                    class="fa fa-trash-alt text-danger "></i></a>
                         </td>
                     </tr>
-                    <tr>
-                        <td>
-                            SER001
-                        </td>
-                        <td>
-                            My tom trung
-                        </td>
-                        <td>
-                            VND
-                        </td>
-                        <td>
-                            10000
-                        </td>
-                        <td>
-                            <i class="fa fa-pen text-warning " style="margin-right: 10px;"></i>
-                            <i class="fa fa-trash-alt text-danger "></i>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            SER001
-                        </td>
-                        <td>
-                            My tom trung
-                        </td>
-                        <td>
-                            VND
-                        </td>
-                        <td>
-                            10000
-                        </td>
-                        <td>
-                            <i class="fa fa-pen text-warning " style="margin-right: 10px;"></i>
-                            <i class="fa fa-trash-alt text-danger "></i>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            SER001
-                        </td>
-                        <td>
-                            My tom trung
-                        </td>
-                        <td>
-                            VND
-                        </td>
-                        <td>
-                            10000
-                        </td>
-                        <td>
-                            <i class="fa fa-pen text-warning " style="margin-right: 10px;"></i>
-                            <i class="fa fa-trash-alt text-danger "></i>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            SER001
-                        </td>
-                        <td>
-                            My tom trung
-                        </td>
-                        <td>
-                            VND
-                        </td>
-                        <td>
-                            10000
-                        </td>
-                        <td>
-                            <i class="fa fa-pen text-warning " style="margin-right: 10px;"></i>
-                            <i class="fa fa-trash-alt text-danger "></i>
-                        </td>
-                    </tr>
+                    </c:forEach>
                     </tbody>
                 </table>
             </div>
             <div class="row footer-container flex-row justify-content-between">
                 <!-- pagination -->
                 <div class="col col-md-6 align-items-center" style="display: flex;">
-                    Showing &nbsp; <strong> 5 </strong>&nbsp; out of&nbsp; <strong> 25 </strong>&nbsp; entries
+                    &nbsp;
                 </div>
                 <div class="col col-md-6 justify-content-end flex-row" style="display: flex;">
                     <nav aria-label="...">
                         <ul class="pagination">
-                            <li class="page-item disabled">
-                                <a class="page-link">Previous</a>
-                            </li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item" aria-current="page">
-                                <a class="page-link" href="#">2</a>
-                            </li>
-                            <li class="page-item active"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#">4</a></li>
-                            <li class="page-item"><a class="page-link" href="#">5</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">Next</a>
-                            </li>
+                            <c:if test="${currentPage != 1}">
+                                <li class="page-item">
+                                    <a class="page-link" href="<%=request.getContextPath()%>/services/list?pageNumber=${currentPage-1}">Previous</a>
+                                </li>
+                            </c:if>
+                            <c:if test="${currentPage == 1}">
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="<%=request.getContextPath()%>/services/list?pageNumber=${currentPage-1}">Previous</a>
+                                </li>
+                            </c:if>
+                            <c:forEach var="i" begin="1" end="${totalPages}">
+                                <c:if test="${currentPage == i}">
+                                    <li class="page-item active">
+                                        <a class="page-link" href="<%=request.getContextPath()%>/services/list?pageNumber=${i}">
+                                            <c:out value="${i}"/>
+                                        </a>
+                                    </li>
+                                </c:if>
+                                <c:if test="${currentPage != i}">
+                                    <li class="page-item">
+                                        <a class="page-link" href="<%=request.getContextPath()%>/services/list?pageNumber=${i}">
+                                            <c:out value="${i}"/>
+                                        </a>
+                                    </li>
+                                </c:if>
+                            </c:forEach>
+                            <c:if test="${currentPage != totalPages}">
+                                <li class="page-item">
+                                    <a class="page-link" href="<%=request.getContextPath()%>/services/list?pageNumber=${currentPage+1}">Next</a>
+                                </li>
+                            </c:if>
+                            <c:if test="${currentPage == totalPages}">
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="<%=request.getContextPath()%>/services/list?pageNumber=${currentPage+1}">Next</a>
+                                </li>
+                            </c:if>
                         </ul>
                     </nav>
                 </div>
